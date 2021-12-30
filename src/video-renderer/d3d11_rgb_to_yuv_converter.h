@@ -1,12 +1,14 @@
 #pragma once
+
 #include "d3d11_render_texture.h"
+#include <memory>
 
 namespace xop {
 
 class D3D11RGBToYUVConverter
 {
 public:
-	D3D11RGBToYUVConverter(ID3D11Device* d3d11_device);
+	D3D11RGBToYUVConverter(IDXGISwapChain* swap_chain);
 	virtual ~D3D11RGBToYUVConverter();
 
 	bool Init(int width, int height);
@@ -19,7 +21,11 @@ public:
 	ID3D11Texture2D* GetAuxiliaryTexture();
 
 private:
+	IDXGISwapChain* swap_chain_ = NULL;
 	ID3D11Device* d3d11_device_ = NULL;
+	ID3D11DeviceContext* d3d11_context_ = NULL;
+	std::unique_ptr<D3D11RenderTexture> main_texture_;
+	std::unique_ptr<D3D11RenderTexture> auxiliary_texture_;
 };
 
 }
