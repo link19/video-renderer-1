@@ -31,6 +31,9 @@ bool D3D11RGBToYUVConverter::Init(int width, int height)
 	main_texture_->InitTexture(width, height, DXGI_FORMAT_NV12, usage, bind_flags, cpu_flags, 0);
 	auxiliary_texture_->InitTexture(width, height, DXGI_FORMAT_NV12, usage, bind_flags, cpu_flags, 0);
 
+
+
+
 	return true;
 }
 
@@ -38,4 +41,36 @@ void D3D11RGBToYUVConverter::Destroy()
 {
 	main_texture_.reset();
 	auxiliary_texture_.reset();
+}
+
+bool D3D11RGBToYUVConverter::Convert(ID3D11Texture2D* argb_texture)
+{
+	return true;
+}
+
+bool D3D11RGBToYUVConverter::Recovery(ID3D11Texture2D* main_texture, ID3D11Texture2D* auxiliary_texture)
+{
+	return true;
+}
+
+ID3D11Texture2D* D3D11RGBToYUVConverter::GetMainTexture()
+{
+	ID3D11Texture2D* nv12_texture = nullptr;
+
+	if (main_texture_) {
+		nv12_texture = main_texture_->GetTexture();
+	}
+
+	return nv12_texture;
+}
+
+ID3D11Texture2D* D3D11RGBToYUVConverter::GetAuxiliaryTexture()
+{
+	ID3D11Texture2D* chroma_texture = nullptr;
+
+	if (auxiliary_texture_) {
+		chroma_texture = auxiliary_texture_->GetTexture();
+	}
+
+	return chroma_texture;
 }
