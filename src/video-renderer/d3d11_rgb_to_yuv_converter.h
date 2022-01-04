@@ -17,7 +17,10 @@ public:
 	bool Convert(ID3D11Texture2D* argb_texture);
 	bool Recovery(ID3D11Texture2D* main_texture, ID3D11Texture2D* auxiliary_texture);
 
+	// yuv420
 	ID3D11Texture2D* GetMainTexture();
+
+	// chroma420
 	ID3D11Texture2D* GetAuxiliaryTexture();
 
 private:
@@ -29,3 +32,4 @@ private:
 };
 
 }
+
