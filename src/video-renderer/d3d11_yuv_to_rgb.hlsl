@@ -34,7 +34,12 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	// B1
 	yuv444.r = YUV420YTexture.Sample(PointSampler, input.uv).r;
 
-	if (pos.x % 2 == 1)
+	if (pos.x % 2 == 0 && pos.y % 2 == 0)
+	{
+		// B2 B3
+		yuv444.gb = YUV420UVTexture.Sample(PointSampler, input.uv).rg;
+	}
+	else if (pos.x % 2 == 1)
 	{
 		// B4 B5
 		yuv444.g = Chroma420YTexture.Sample(PointSampler, float2(input.uv.x / 2, input.uv.y));
@@ -52,11 +57,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		yuv444.g = Chroma420UVTexture.Sample(PointSampler, float2(input.uv.x / 2, input.uv.y)).g;
 		yuv444.b = Chroma420UVTexture.Sample(PointSampler, float2(input.uv.x / 2 + 0.5, input.uv.y)).g;
 	}
-	else  if (pos.x % 2 == 0 && pos.y % 2 == 0)
-	{
-		// B2 B3
-		yuv444.gb = YUV420UVTexture.Sample(PointSampler, input.uv).rg;
-	}
 
 	// yuv444 to rgba
 	yuv444 += offset;
@@ -64,6 +64,5 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	Output.g = dot(yuv444, Gcoeff);
 	Output.b = dot(yuv444, Bcoeff);
 	Output.a = 1.0f;
-
 	return Output;
 }
