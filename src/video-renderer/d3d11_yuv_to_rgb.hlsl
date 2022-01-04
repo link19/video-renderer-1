@@ -1,6 +1,6 @@
 Texture2D YUV420YTexture      : register(t0);
-Texture2D YUV420UVTexture	  : register(t1);
-Texture2D Chroma420YTexture	  : register(t2);
+Texture2D YUV420UVTexture     : register(t1);
+Texture2D Chroma420YTexture   : register(t2);
 Texture2D Chroma420UVTexture  : register(t3);
 
 SamplerState LinearSampler : register(s0);
@@ -28,10 +28,11 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	const float3 Gcoeff = { 1.1644, -0.3918, -0.8130 };
 	const float3 Bcoeff = { 1.1644,  2.0172,  0.0000 };
 
-	int2 pos = int2(i.uv * float2(width, height));
+	int2 pos = int2(input.uv * float2(width, height));
+	float3 yuv444 = offset;
 
 	// B1
-	yuv444.r = YUV420YTexture.Sample(PointSampler, i.uv).r;
+	yuv444.r = YUV420YTexture.Sample(PointSampler, input.uv).r;
 
 	if (pos.x % 2 == 1)
 	{
