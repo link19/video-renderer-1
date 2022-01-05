@@ -14,22 +14,27 @@ public:
 	bool Init(int width, int height);
 	void Destroy();
 
-	bool Convert(ID3D11Texture2D* argb_texture);
-	bool Recovery(ID3D11Texture2D* main_texture, ID3D11Texture2D* auxiliary_texture);
+	bool Convert(ID3D11Texture2D* rgba_texture);
 
-	// yuv420
-	ID3D11Texture2D* GetMainTexture();
-
-	// chroma420
-	ID3D11Texture2D* GetAuxiliaryTexture();
+	ID3D11Texture2D* GetYUV420Texture();
+	ID3D11Texture2D* GetChroma420Texture();
 
 private:
+	bool CreateTexture(int width, int height);
+	bool CreateSampler();
+	bool CreateBuffer();
+
+	int width_ = 0;
+	int height_ = 0;
+
 	IDXGISwapChain* swap_chain_ = NULL;
 	ID3D11Device* d3d11_device_ = NULL;
 	ID3D11DeviceContext* d3d11_context_ = NULL;
-	std::unique_ptr<D3D11RenderTexture> main_texture_;
-	std::unique_ptr<D3D11RenderTexture> auxiliary_texture_;
+	ID3D11SamplerState* point_sampler_ = NULL;
+	ID3D11Buffer* buffer_ = NULL;
+
+	std::unique_ptr<D3D11RenderTexture> yuv420_texture_;
+	std::unique_ptr<D3D11RenderTexture> chroma420_texture_;
 };
 
 }
-
