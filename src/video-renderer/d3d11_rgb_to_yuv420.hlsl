@@ -1,7 +1,6 @@
-Texture2D RGBTexture : register(t0);
+Texture2D RGBTexture       : register(t0);
 
-SamplerState LinearSampler : register(s0);
-SamplerState PointSampler  : register(s1);
+SamplerState PointSampler  : register(s0);
 
 struct PixelShaderInput
 {
