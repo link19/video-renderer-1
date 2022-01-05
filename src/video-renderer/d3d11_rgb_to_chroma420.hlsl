@@ -1,7 +1,6 @@
-Texture2D RGBTexture : register(t0);
+Texture2D RGBTexture      : register(t0);
 
-SamplerState LinearSampler : register(s0);
-SamplerState PointSampler  : register(s1);
+SamplerState PointSampler : register(s0);
 
 struct PixelShaderInput
 {
@@ -16,7 +15,7 @@ struct PixelShaderOutput
     float2 UVClolor : SV_Target1;
 };
 
-cbuffer ImageParams : register(b0)
+cbuffer RGBParams : register(b0)
 {
     float width;
     float height;
@@ -29,7 +28,7 @@ PixelShaderOutput main(PixelShaderInput input) : SV_TARGET
     const float3 UCoeff = float3(-0.115, -0.385, 0.500);
     const float3 VCoeff = float3(0.500, -0.454, -0.046);
     
-    float2 pos = int2(input.uv * float2(width, height));
+    int2   pos = int2(input.uv * float2(width, height));
     float3 coeff = UCoeff;
     float  offset = 0.5;
 
