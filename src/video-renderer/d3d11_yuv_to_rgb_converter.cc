@@ -69,9 +69,9 @@ bool D3D11YUVToRGBConverter::CreateTexture(int width, int height)
 {
 	rgba_texture_.reset(new D3D11RenderTexture(swap_chain_));
 
-	D3D11_USAGE usage = D3D11_USAGE_DYNAMIC;
-	DXGI_FORMAT format = DXGI_FORMAT_NV12;
-	UINT bind_flags = D3D11_BIND_SHADER_RESOURCE;
+	D3D11_USAGE usage = D3D11_USAGE_DEFAULT;
+	DXGI_FORMAT format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	UINT bind_flags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 	if (!rgba_texture_->InitTexture(width, height, format, usage, bind_flags, 0, 0)) {
 		return  false;
@@ -170,21 +170,28 @@ bool D3D11YUVToRGBConverter::Combine(ID3D11Texture2D* yuv420_texture, ID3D11Text
 	}
 
 	srv_desc.Format = DXGI_FORMAT_R8G8_UNORM;
+
 	hr = d3d11_device_->CreateShaderResourceView(yuv420_texture, &srv_desc, yuv420_uv_srv.GetAddressOf());
 	if (FAILED(hr)) {
 		return false;
 	}
 
-	hr = d3d11_device_->CreateShaderResourceView(chroma420_texture, &srv_desc, yuv420_uv_srv.GetAddressOf());
+	hr = d3d11_device_->CreateShaderResourceView(chroma420_texture, &srv_desc, chroma420_uv_srv.GetAddressOf());
 	if (FAILED(hr)) {
 		return false;
 	}
+
+	YUVParams yuv_params;
+	yuv_params.width = static_cast<float>(width_);
+	yuv_params.height = static_cast<float>(height_);
+	d3d11_context_->UpdateSubresource((ID3D11Resource*)buffer_, 0, NULL, &yuv_params, 0, 0);
 
 	rgba_texture_->Begin();
 	rgba_texture_->PSSetTexture(0, yuv420_y_srv.Get());
 	rgba_texture_->PSSetTexture(1, yuv420_uv_srv.Get());
 	rgba_texture_->PSSetTexture(2, chroma420_y_srv.Get());
 	rgba_texture_->PSSetTexture(3, chroma420_uv_srv.Get());
+	rgba_texture_->PSSetConstant(0, buffer_);
 	rgba_texture_->PSSetSamplers(0, point_sampler_);
 	rgba_texture_->Draw();
 	rgba_texture_->End();
