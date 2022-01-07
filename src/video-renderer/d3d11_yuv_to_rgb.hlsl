@@ -3,8 +3,7 @@ Texture2D YUV420UVTexture     : register(t1);
 Texture2D Chroma420YTexture   : register(t2);
 Texture2D Chroma420UVTexture  : register(t3);
 
-SamplerState LinearSampler : register(s0);
-SamplerState PointSampler  : register(s1);
+SamplerState PointSampler     : register(s0);
 
 struct PixelShaderInput
 {
@@ -13,7 +12,7 @@ struct PixelShaderInput
 	float4 color : COLOR0;
 };
 
-cbuffer ImageParams : register(b0)
+cbuffer YUVParams : register(b0)
 {
 	float width;
 	float height;
