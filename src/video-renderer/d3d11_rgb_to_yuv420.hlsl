@@ -11,8 +11,8 @@ struct PixelShaderInput
 
 struct PixelShaderOutput
 {
-    float  YColor   : SV_Target0;
-    float2 UVClolor : SV_Target1;
+    float4  YColor   : SV_Target0;
+    float4  UVClolor : SV_Target1;
 };
 
 PixelShaderOutput main(PixelShaderInput input) : SV_TARGET
@@ -33,7 +33,7 @@ PixelShaderOutput main(PixelShaderInput input) : SV_TARGET
     float  u = dot(point2, UCoeff) + offset.y;
     float  v = dot(point2, VCoeff) + offset.z;
 
-    Output.YColor   = float(y);
-    Output.UVClolor = float2(u, v);
+    Output.YColor   = float4(y, 0, 0, 0);
+    Output.UVClolor = float4(u, v, 0, 0);
     return Output;
 }
