@@ -49,8 +49,17 @@ HWND MainWindow::GetHandle()
 	return wnd_;
 }
 
+void MainWindow::SetMessageCallback(const MessageCallback& message_callback)
+{
+	message_callback_ = message_callback;
+}
+
 bool MainWindow::OnMessage(UINT msg, WPARAM wp, LPARAM lp, LRESULT* result)
 {
+	if (message_callback_) {
+		message_callback_(msg, wp, lp, result);
+	}
+
 	switch (msg)
 	{
 	case WM_SIZE:
