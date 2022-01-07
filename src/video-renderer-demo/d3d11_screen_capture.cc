@@ -106,7 +106,7 @@ bool D3D11ScreenCapture::InitD3D11()
 
 	hr = dxgi_output1->DuplicateOutput(d3d11_device_.Get(), dxgi_output_duplication_.GetAddressOf());
 	if (FAILED(hr)) {
-		/* 0x887a0004: NVIDIA控制面板-->全局设置--首选图形处理器(自动选择) */
+		/* 0x887a0004: NVIDIA鎺у埗闈㈡澘-->鍏ㄥ眬璁剧疆--棣栭�夊浘褰㈠鐞嗗櫒(鑷姩閫夋嫨) */
 		printf("[D3D11ScreenCapture] Failed to get duplicate output.\n");
 		return false;
 	}
@@ -140,7 +140,7 @@ bool D3D11ScreenCapture::CreateTexture()
 	desc.MipLevels = 1;
 	desc.ArraySize = 1;
 	desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-	desc.BindFlags = 0;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	desc.SampleDesc.Count = 1;
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.CPUAccessFlags = 0;
@@ -152,6 +152,7 @@ bool D3D11ScreenCapture::CreateTexture()
 		return false;
 	}
 	
+	desc.BindFlags = 0;
 	desc.Usage = D3D11_USAGE_STAGING;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 	desc.MiscFlags = 0;
@@ -297,15 +298,17 @@ bool D3D11ScreenCapture::Capture(Image& image)
 		return false;
 	}
 
-	if (image_size_ > 0) {
-		if (image.bgra.size() != image_size_) {
-			image.bgra.resize(image_size_);
-		}
-
-		image.bgra.assign(image_.get(), image_.get() + image_size_);
-		image.width = dxgi_desc_.ModeDesc.Width;
-		image.height = dxgi_desc_.ModeDesc.Height;
+	if (image_size_ == 0) {
+		return false;
 	}
+
+	if (image.bgra.size() != image_size_) {
+		image.bgra.resize(image_size_);
+	}
+
+	image.bgra.assign(image_.get(), image_.get() + image_size_);
+	image.width = dxgi_desc_.ModeDesc.Width;
+	image.height = dxgi_desc_.ModeDesc.Height;
 
 	if (shared_handle_) {
 		image.shared_handle = shared_handle_;
