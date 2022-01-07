@@ -11,8 +11,8 @@ struct PixelShaderInput
 
 struct PixelShaderOutput
 {
-    float  YColor   : SV_Target0;
-    float2 UVClolor : SV_Target1;
+    float4  YColor   : SV_Target0;
+    float4  UVClolor : SV_Target1;
 };
 
 cbuffer RGBParams : register(b0)
@@ -71,7 +71,7 @@ PixelShaderOutput main(PixelShaderInput input) : SV_TARGET
     image_rgb = RGBTexture.Sample(PointSampler, image_uv).rgb;
     float v = dot(image_rgb, coeff) + offset;
 
-    Output.YColor   = float(y);
-    Output.UVClolor = float2(u, v);
+    Output.YColor   = float4(y, 0, 0, 0);
+    Output.UVClolor = float4(u, v, 0, 0);
     return Output;
 }
