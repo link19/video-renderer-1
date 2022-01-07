@@ -199,6 +199,7 @@ bool D3D11RGBToYUVConverter::Convert(ID3D11Texture2D* rgba_texture)
 
 	chroma420_texture_->Begin();
 	chroma420_texture_->PSSetTexture(0, argb_srv.Get());
+	chroma420_texture_->PSSetConstant(0, buffer_);
 	chroma420_texture_->PSSetSamplers(0, point_sampler_);
 	chroma420_texture_->Draw();
 	chroma420_texture_->End();
