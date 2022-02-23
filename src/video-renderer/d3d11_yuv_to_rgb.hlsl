@@ -27,12 +27,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	const float3 Gcoeff = float3( 1.164, -0.392, -0.813);
 	const float3 Bcoeff = float3( 1.164,  2.017,  0.000);
 
-	//const float3 offset = { -0.0627451017, -0.501960814, -0.501960814 };
-	//const float3 Rcoeff = { 1.1644,  0.0000,  1.5960 };
-	//const float3 Gcoeff = { 1.1644, -0.3918, -0.8130 };
-	//const float3 Bcoeff = { 1.1644,  2.0172,  0.0000 };
-
-
 	int2 pos = int2(input.uv * float2(width, height));
 	float3 yuv444 = offset;
 
@@ -47,8 +41,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	else if (pos.x % 2 == 1)
 	{
 		// B4 B5
-		yuv444.g = Chroma420YTexture.Sample(PointSampler, float2(input.uv.x / 2, input.uv.y)).r;
-		yuv444.b = Chroma420YTexture.Sample(PointSampler, float2(input.uv.x / 2 + 0.5, input.uv.y)).r;
+		yuv444.g = Chroma420YTexture.Sample(PointSampler, float2(input.uv.x / 2, input.uv.y));
+		yuv444.b = Chroma420YTexture.Sample(PointSampler, float2(input.uv.x / 2 + 0.5, input.uv.y));
 	}
 	else if (pos.x % 4 == 0 && pos.y % 2 == 1)
 	{
@@ -63,7 +57,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 		yuv444.b = Chroma420UVTexture.Sample(PointSampler, float2(input.uv.x / 2 + 0.5, input.uv.y)).g;
 	}
 
-	// yuv444 to rgba
+	// yuv to rgb
 	yuv444 += offset;
 	Output.r = dot(yuv444, Rcoeff);
 	Output.g = dot(yuv444, Gcoeff);
